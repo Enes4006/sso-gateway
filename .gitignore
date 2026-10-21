@@ -1,0 +1,51 @@
+# ==========================================
+# Python & Sanal Ortamlar (Virtual Environments)
+# ==========================================
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================================
+# Çevre Değişkenleri & Gizli Bilgiler (Secrets)
+# ==========================================
+.env
+.env.*
+!.env.example
+secrets.json
+
+# ==========================================
+# IDE ve Editör Dosyaları
+# ==========================================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+
+# ==========================================
+# Test & Coverage & Loglar
+# ==========================================
+*.log
+logs/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# İşletim Sistemi Sistem Dosyaları
+# ==========================================
+.DS_Store
+Thumbs.db

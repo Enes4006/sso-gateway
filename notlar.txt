@@ -1,0 +1,44 @@
+SSO'nun temel mantığı şudur: Kullanıcı bir kez SSO Gateway üzerinden kimliğini doğrular (JWT Access Token alır), 
+ardından bu token ile şirket bünyesindeki farklı mikroservislere ve uygulamalara şifre girmeden erişir.
+
+
+AMAÇ
+
+Geleneksel sistemlerde kullanıcı her bir şirket uygulamasına (İK, Muhasebe, CRM, E-posta vb.) ayrı ayrı kullanıcı adı ve şifre ile giriş yapmak zorundadır. 
+Bu durum hem kullanıcı deneyimini zorlaştırır hem de şifre çalınması/yönetimi kaynaklı büyük siber güvenlik riskleri doğurur.
+
+Bizim Amacımız:
+AuthTake'in de odaklandığı "Tek Merkezden Güvenli Kimlik Doğrulama" (Centralized Identity & Access Management - IAM) prensibini simüle etmekti.
+Kullanıcının sadece bir kez ana kimlik sunucusunda (SSO Gateway) doğrulama yapmasını, ardından aldığı kriptografik ve imzalı dijital kimlik kartı (JWT Access Token) sayesinde şirket bünyesindeki diğer tüm bağımsız uygulamalara tekrar şifre girmeden güvenle erişebilmesini sağladık.
+
+
+
+Bu Proje Bana Teknik Olarak Ne Kazandırdı?
+
+OAuth 2.0 / Bearer Token Standartları: Modern web API'lerinde kimlik doğrulamanın standart yöntemini uyguladım.
+SSO ve Zero Trust (Sıfır Güven) Mantığı: Servislerin birbirine güvenmek yerine her istekte merkezi token doğrulaması yapması mantığını gördüm.
+Stateless (Durumsuz) Oturum Yönetimi: Sunucu tarafında oturum (session) tutmaya gerek kalmadan, token'ın kendisinin bir yetki belgesi olarak nasıl taşındığını öğrendim.
+Risk Tabanlı Güvenlik (Risk-Based Authentication): Kullanıcının IP adresi veya cihaz parametrelerine göre token içine risk skorları ekleme simülasyonu yaptım.
+
+------------------------
+
+
+1. Güvenlik ve Şifreleme Temelleri (security.py & config.py)
+Parolaları veritabanında açık metin (plain text) olarak tutmak yerine bcrypt algoritması ile hash'ledik.
+
+Kullanıcının kimliğini temsil eden ve süresi dolabilen (exp) JWT (JSON Web Token) yapısını kurguladık. 
+Token'ı HS256 simetrik şifreleme algoritması ve gizli bir SECRET_KEY ile imzaladık.
+
+2. Merkezi SSO Gateway Sunucusu (main.py - Port 8000)
+Kimlik doğrulama merkezi olarak görev yaptı.
+
+/auth/login uç noktası üzerinden kullanıcının şifresini doğruladı.
+
+Giriş başarılıysa kullanıcının rolü, e-postası ve IP adresi / risk skoru gibi güvenlik bağlamlarını içeren imzalı bir token üretti.
+
+3. Bağımsız İkinci Servis (client_app.py - Port 8001)
+Şirketin İK / Raporlama uygulamasını temsil etti.
+
+Kendi içinde hiçbir kullanıcı adı veya şifre tutmadı, sormadı.
+
+Yalnızca istekle birlikte gelen JWT Token'ın imzasını kontrol etti ve geçerliyse kullanıcıya kapılarını açtı.
