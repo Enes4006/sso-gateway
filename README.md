@@ -36,8 +36,8 @@ Kullanıcının tek bir merkezi identity provider (SSO Gateway) üzerinden doğr
 
 ```bash
 # Projeyi klonlayın
-git clone [https://github.com/KULLANICI_ADI/sso-gateway-demo.git](https://github.com/KULLANICI_ADI/sso-gateway-demo.git)
-cd sso-gateway-demo
+git clone [https://github.com/Enes4006/sso-gateway.git](https://github.com/Enes4006/sso-gateway.git)
+cd sso-gateway
 
 # Sanal ortam oluşturun ve aktif edin
 python -m venv venv
@@ -47,22 +47,24 @@ venv\Scripts\activate
 source venv/bin/activate
 
 # Gerekli paketleri yükleyin
-pip install fastapi uvicorn python-jose[cryptography] passlib[bcrypt] python-multipart
+pip install fastapi uvicorn python-jose[cryptography] passlib[bcrypt==4.0.1] python-multipart
+```
 
-
----
 Sistemi tam olarak deneyimlemek için iki ayrı terminal pencerisinde iki servisi de başlatın:
+
 
 1. Terminal - SSO Gateway (Port 8000):
 
+```bash
 uvicorn main:app --port 8000 --reload
+```
 
 2. Terminal - İK Mikroservisi (Port 8001):
 
+```bash
 uvicorn client_app:app --port 8001 --reload
----
 
-
+```
 
 🧪 Test Adımları
 SSO Gateway Dokümantasyonuna Gidin: http://127.0.0.1:8000/docs
